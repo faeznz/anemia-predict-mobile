@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:predict_anemia/bottom_navbar.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/home/home_screen.dart';
 import 'package:predict_anemia/screen/login_register/login_screen.dart';
 import 'package:predict_anemia/screen/login_register/register_screen.dart';
 
@@ -136,7 +136,8 @@ class WelcomeScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
+                                    builder: (context) =>
+                                        const MyButtomNavbar(),
                                   ),
                                 );
                               },
