@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
       logo: Image.network(
           'https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/flutter-512.png'),
       durationInSeconds: 2,
-      navigator: WelcomeScreen(),
+      navigator: const WelcomeScreen(),
     );
   }
 }
