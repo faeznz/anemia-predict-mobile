@@ -15,6 +15,12 @@ class TextStyleConstant {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle montserratSemibold = GoogleFonts.montserrat(
+    fontSize: 24,
+    color: ColorConstant.primaryColor,
+    fontWeight: FontWeight.w300,
+  );
+
   static TextStyle montserratNormal = GoogleFonts.montserrat(
     fontSize: 12,
     color: ColorConstant.whiteColor,

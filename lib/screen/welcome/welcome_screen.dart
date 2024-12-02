@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/screen/home/home_screen.dart';
+import 'package:predict_anemia/screen/login_register/login_screen.dart';
+import 'package:predict_anemia/screen/login_register/register_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -25,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     'AnemiaPredict',
-                    style: TextStyleConstant.montserratBold,
+                    style: TextStyleConstant.montserratBlack,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +67,15 @@ class WelcomeScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
+                                    );
+                                  },
                                   style: ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
                                       ColorConstant.primaryColor,
@@ -87,7 +98,15 @@ class WelcomeScreen extends StatelessWidget {
                                   width: 12,
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegisterScreen(),
+                                      ),
+                                    );
+                                  },
                                   style: ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
                                       ColorConstant.accentColor,
@@ -113,7 +132,14 @@ class WelcomeScreen extends StatelessWidget {
                               bottom: 24,
                             ),
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              },
                               child: Text(
                                 'Skip >>',
                                 style:
