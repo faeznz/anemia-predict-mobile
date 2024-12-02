@@ -18,74 +18,111 @@ class WelcomeScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
+            padding: const EdgeInsets.symmetric(vertical: 52),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'AnemiaPredict',
-                    style: TextStyleConstant.interBold,
+                    style: TextStyleConstant.montserratBold,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            'Selamat',
-                            style: TextStyleConstant.interBold,
-                          ),
-                          Text(
-                            'Datang !',
-                            style: TextStyleConstant.interBold,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 48,
+                          vertical: 56,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Selamat\n',
+                            style: TextStyleConstant.montserratBlack.copyWith(
+                              fontSize: 40,
+                              height: 1.0,
+                            ),
                             children: [
-                              TextButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    ColorConstant.primaryColor,
-                                  ),
-                                  fixedSize: WidgetStateProperty.all<Size>(
-                                    const Size(100, 40),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Masuk',
-                                  style: TextStyleConstant.interNormal.copyWith(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    ColorConstant.accentColor,
-                                  ),
-                                  fixedSize: WidgetStateProperty.all<Size>(
-                                    const Size(100, 40),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Daftar',
-                                  style: TextStyleConstant.interNormal.copyWith(
-                                    color: ColorConstant.primaryColor,
-                                    fontSize: 14,
-                                  ),
+                              TextSpan(
+                                text: 'Datang!',
+                                style:
+                                    TextStyleConstant.montserratBlack.copyWith(
+                                  fontSize: 56,
                                 ),
                               ),
                             ],
                           ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text('Daftar'),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 16,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () {},
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      ColorConstant.primaryColor,
+                                    ),
+                                    fixedSize: WidgetStateProperty.all<Size>(
+                                      const Size(100, 40),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Masuk',
+                                    style: TextStyleConstant.montserratBold
+                                        .copyWith(
+                                      fontSize: 16,
+                                      letterSpacing: 1,
+                                      color: ColorConstant.whiteColor,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      ColorConstant.accentColor,
+                                    ),
+                                    fixedSize: WidgetStateProperty.all<Size>(
+                                      const Size(100, 40),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Daftar',
+                                    style: TextStyleConstant.montserratBold
+                                        .copyWith(
+                                      fontSize: 16,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 24,
+                            ),
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Skip >>',
+                                style:
+                                    TextStyleConstant.montserratBold.copyWith(
+                                  fontSize: 14,
+                                  color: ColorConstant.primaryColor,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
