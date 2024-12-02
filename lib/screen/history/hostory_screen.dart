@@ -15,7 +15,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     {
       'tanggal': '1 Desember 2024 - 09:16',
       'hasil': 'Anda tidak terindikasi Anemia',
-      'status': true, // true untuk tidak terindikasi, false untuk terindikasi
+      'status': true,
     },
     {
       'tanggal': '28 November 2024 - 20:46',
@@ -32,7 +32,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       'hasil': 'Anda tidak terindikasi Anemia',
       'status': true,
     },
-    // Tambahkan data riwayat lainnya di sini
   ];
 
   @override
