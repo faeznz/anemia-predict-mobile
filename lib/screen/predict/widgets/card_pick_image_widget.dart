@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/screen/predict/process_screen.dart';
 
 class CardPickImageWidget extends StatefulWidget {
   const CardPickImageWidget({super.key});
@@ -16,6 +17,7 @@ class CardPickImageWidget extends StatefulWidget {
 class _CardPickImageWidgetState extends State<CardPickImageWidget> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
+  // final _apiController = TextEditingController(text: '192.168.1.30');
 
   Future<void> _openCamera() async {
     try {
@@ -42,7 +44,21 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 56),
+          const SizedBox(height: 20),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          //   child: TextField(
+          //     controller: _apiController,
+          //     decoration: InputDecoration(
+          //       hintText: 'Masukkan URL API',
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          const SizedBox(height: 20),
+          // const SizedBox(height: 56),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -137,7 +153,25 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_imageFile != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProcessScreen(
+                                    imagePath: _imageFile!.path,
+                                    // apiUrl: _apiController.text, // Tambahkan URL API di sini
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Silakan pilih gambar terlebih dahulu')),
+                              );
+                            }
+                          },
                           style: ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(
                               ColorConstant.whiteColor,
@@ -156,7 +190,7 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

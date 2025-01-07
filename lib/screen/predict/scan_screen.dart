@@ -13,11 +13,13 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            HeaderPickImageWidget(),
-            CardPickImageWidget(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HeaderPickImageWidget(),
+              CardPickImageWidget(),
+            ],
+          ),
         ),
       ),
     );
