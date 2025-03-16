@@ -36,10 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 100),
                 const TextFieldLoginWidget(),
-                const SizedBox(height: 128),
+                const SizedBox(height: 24),
                 const Column(
                   children: [
-                    ButtonLoginWidget(),
+                    // ButtonLoginWidget(),
                     DividerLoginWidget(),
                     GoogleButtonWidget(),
                   ],

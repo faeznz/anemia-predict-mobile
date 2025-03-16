@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:predict_anemia/bottom_navbar.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,11 +18,27 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
+      _checkTokenAndNavigate();
+    });
+  }
+
+  Future<void> _checkTokenAndNavigate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      // Token exists, navigate to HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MyButtomNavbar()),
+      );
+    } else {
+      // No token, navigate to WelcomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeScreen()),
       );
-    });
+    }
   }
 
   @override

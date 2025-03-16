@@ -59,8 +59,12 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration successful!')),
         );
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WelcomeScreen(),
+          ),
+        );
       } else {
         // Registration failed
         ScaffoldMessenger.of(context).showSnackBar(
