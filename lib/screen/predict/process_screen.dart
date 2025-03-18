@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dio/dio.dart'; // Import dio
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -8,14 +8,18 @@ import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/connection_
 import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/good_result_widget.dart';
 import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/warning_result_widget.dart';
 import 'package:predict_anemia/screen/predict/widgets/header_process_image_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
+  final String? customApiIp; // Tambahkan parameter IP custom
 
   const ProcessScreen({
     super.key,
     required this.imagePath,
+    this.customApiIp, // Tambahkan parameter IP custom
   });
 
   @override
@@ -24,19 +28,62 @@ class ProcessScreen extends StatefulWidget {
 
 class _ProcessScreenState extends State<ProcessScreen> {
   String? _predictionResult;
-  Dio _dio = Dio(); // Inisialisasi dio
+  Dio _dio = Dio();
+  String _apiIp = '10.0.2.2'; // Default IP
 
   @override
   void initState() {
     super.initState();
-    _predictAnemia();
+    if (widget.customApiIp != null) {
+      _apiIp = widget.customApiIp!;
+    }
+    _processAndPredictAnemia();
   }
 
-  Future<void> _predictAnemia() async {
-    final url = Uri.parse('http://10.0.2.2:8080/predict');
+  Future<void> _processAndPredictAnemia() async {
+    try {
+      final croppedImagePath = await _cropImage(widget.imagePath);
+      await _predictAnemia(croppedImagePath);
+    } catch (e) {
+      setState(() {
+        _predictionResult = 'Error processing image';
+      });
+      print('Error processing image: $e');
+    }
+  }
+
+  Future<String> _cropImage(String imagePath) async {
+    final originalImage = img.decodeImage(File(imagePath).readAsBytesSync());
+
+    if (originalImage != null) {
+      final width = originalImage.width;
+      final height = originalImage.height;
+      final cropSize = (width < height ? width : height) * 0.8;
+
+      final offsetX = (width - cropSize) ~/ 2;
+      final offsetY = (height - cropSize) ~/ 2;
+
+      final croppedImage = img.copyCrop(originalImage,
+          x: offsetX,
+          y: offsetY,
+          width: cropSize.toInt(),
+          height: cropSize.toInt());
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final croppedImagePath =
+          '${appDir.path}/${imagePath.split('/').last.split('.').first}_cropped.jpg';
+      File(croppedImagePath).writeAsBytesSync(img.encodeJpg(croppedImage));
+
+      return croppedImagePath;
+    } else {
+      throw Exception('Failed to decode image');
+    }
+  }
+
+  Future<void> _predictAnemia(String imagePath) async {
+    final url = Uri.parse('http://$_apiIp:8080/predict');
     final request = http.MultipartRequest('POST', url);
-    request.files
-        .add(await http.MultipartFile.fromPath('file', widget.imagePath));
+    request.files.add(await http.MultipartFile.fromPath('file', imagePath));
 
     try {
       final response = await request.send();
