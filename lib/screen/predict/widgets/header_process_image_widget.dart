@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:predict_anemia/bottom_navbar.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/home/home_screen.dart';
 
 class HeaderProcessImageWidget extends StatelessWidget {
   const HeaderProcessImageWidget({super.key});
@@ -21,7 +21,7 @@ class HeaderProcessImageWidget extends StatelessWidget {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
+                        builder: (context) => const MyButtomNavbar(),
                       ),
                       (route) => false);
                 },

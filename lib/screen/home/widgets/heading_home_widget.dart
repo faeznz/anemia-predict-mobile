@@ -19,16 +19,16 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Halo, Zulfan',
+              'Selamat Datang !',
               style: TextStyleConstant.montserratBold.copyWith(
                 fontSize: 18,
               ),
             ),
-            FaIcon(
-              FontAwesomeIcons.user,
-              color: ColorConstant.primaryColor,
-              size: 20,
-            ),
+            // FaIcon(
+            //   FontAwesomeIcons.user,
+            //   color: ColorConstant.primaryColor,
+            //   size: 20,
+            // ),
           ],
         ),
         const SizedBox(height: 24),

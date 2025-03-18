@@ -15,6 +15,7 @@ class TextFieldLoginWidget extends StatefulWidget {
 
 class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
   bool _obscureText = true;
+  bool _isLoading = false; // Add loading variable
 
   // Controllers for the text fields
   final _emailController = TextEditingController();
@@ -40,13 +41,17 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
       password: password,
     );
 
+    setState(() {
+      _isLoading = true; // Set loading to true
+    });
+
     try {
       // Create a Dio instance
       final dio = Dio();
 
       // Replace with your actual API endpoint
       final response = await dio.post(
-        'http://10.0.2.2:4040/auth/login',
+        'https://api-data-predict-anamia.vercel.app/auth/login',
         data: loginModel.toJson(),
       );
 
@@ -64,7 +69,7 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login successful! Token: $token')),
+          SnackBar(content: Text('Login successful!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,6 +88,10 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('An error occurred.')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Set loading to false
+      });
     }
   }
 
@@ -91,7 +100,7 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
     return Column(
       children: [
         TextField(
-          controller: _emailController, // Add controller here
+          controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Email',
             hintStyle: TextStyleConstant.montserratNormal.copyWith(
@@ -109,7 +118,7 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
         ),
         const SizedBox(height: 24),
         TextField(
-          controller: _passwordController, // Add controller here
+          controller: _passwordController,
           obscureText: _obscureText,
           decoration: InputDecoration(
             hintText: 'Password',
@@ -139,31 +148,35 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
         const SizedBox(height: 128),
         SizedBox(
           width: double.infinity,
-          child: TextButton(
-            onPressed: _submitData, // Call the _submitData function
-            style: TextButton.styleFrom(
-              backgroundColor: ColorConstant.primaryColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 12,
-              ),
-              textStyle: TextStyleConstant.montserratNormal.copyWith(
-                color: ColorConstant.secondaryColor,
-                letterSpacing: 1,
-                fontSize: 16,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Masuk',
-              style: TextStyleConstant.montserratNormal.copyWith(
-                color: ColorConstant.whiteColor,
-                fontSize: 20,
-                letterSpacing: 1,
-              ),
-            ),
-          ),
+          child: _isLoading
+              ? const Center(
+                  child:
+                      CircularProgressIndicator()) // Display loading indicator
+              : TextButton(
+                  onPressed: _submitData,
+                  style: TextButton.styleFrom(
+                    backgroundColor: ColorConstant.primaryColor,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
+                    textStyle: TextStyleConstant.montserratNormal.copyWith(
+                      color: ColorConstant.secondaryColor,
+                      letterSpacing: 1,
+                      fontSize: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Masuk',
+                    style: TextStyleConstant.montserratNormal.copyWith(
+                      color: ColorConstant.whiteColor,
+                      fontSize: 20,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
         )
       ],
     );

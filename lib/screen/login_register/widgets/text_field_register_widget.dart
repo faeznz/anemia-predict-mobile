@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/model/user_model.dart';
-import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
+import 'package:predict_anemia/screen/login_register/login_screen.dart';
 
 class TextFieldRegisterWidget extends StatefulWidget {
   const TextFieldRegisterWidget({super.key});
@@ -16,6 +16,7 @@ class TextFieldRegisterWidget extends StatefulWidget {
 class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
   bool _obscureText = true;
   String? _selectedGender;
+  bool _isLoading = false; // Tambahkan variabel loading
 
   // Controllers for the text fields
   final _namaController = TextEditingController();
@@ -45,12 +46,16 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
       gender: jenisKelamin,
     );
 
+    setState(() {
+      _isLoading = true; // Set loading ke true saat mengirim data
+    });
+
     try {
       final dio = Dio();
 
       // Replace with your actual API endpoint
       final response = await dio.post(
-        'http://10.0.2.2:4040/auth/register',
+        'https://api-data-predict-anamia.vercel.app/auth/register',
         data: userModel.toJson(),
       );
 
@@ -62,7 +67,7 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => WelcomeScreen(),
+            builder: (context) => LoginScreen(),
           ),
         );
       } else {
@@ -83,6 +88,10 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('An error occurred.')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Set loading ke false setelah selesai
+      });
     }
   }
 
@@ -223,31 +232,35 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
         const SizedBox(height: 40),
         SizedBox(
           width: double.infinity,
-          child: TextButton(
-            onPressed: _submitData,
-            style: TextButton.styleFrom(
-              backgroundColor: ColorConstant.primaryColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 12,
-              ),
-              textStyle: TextStyleConstant.montserratNormal.copyWith(
-                color: ColorConstant.secondaryColor,
-                letterSpacing: 1,
-                fontSize: 16,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Daftar',
-              style: TextStyleConstant.montserratNormal.copyWith(
-                color: ColorConstant.whiteColor,
-                fontSize: 20,
-                letterSpacing: 1,
-              ),
-            ),
-          ),
+          child: _isLoading
+              ? const Center(
+                  child:
+                      CircularProgressIndicator()) // Tampilkan loading indicator
+              : TextButton(
+                  onPressed: _submitData,
+                  style: TextButton.styleFrom(
+                    backgroundColor: ColorConstant.primaryColor,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
+                    textStyle: TextStyleConstant.montserratNormal.copyWith(
+                      color: ColorConstant.secondaryColor,
+                      letterSpacing: 1,
+                      fontSize: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Daftar',
+                    style: TextStyleConstant.montserratNormal.copyWith(
+                      color: ColorConstant.whiteColor,
+                      fontSize: 20,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
         ),
       ],
     );

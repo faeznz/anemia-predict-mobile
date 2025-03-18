@@ -1,12 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart'; // Import dio
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/connection_lost_result_widget.dart';
 import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/good_result_widget.dart';
 import 'package:predict_anemia/screen/predict/widgets/hasil_prediksi/warning_result_widget.dart';
 import 'package:predict_anemia/screen/predict/widgets/header_process_image_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
@@ -22,6 +24,7 @@ class ProcessScreen extends StatefulWidget {
 
 class _ProcessScreenState extends State<ProcessScreen> {
   String? _predictionResult;
+  Dio _dio = Dio(); // Inisialisasi dio
 
   @override
   void initState() {
@@ -32,8 +35,8 @@ class _ProcessScreenState extends State<ProcessScreen> {
   Future<void> _predictAnemia() async {
     final url = Uri.parse('http://10.0.2.2:8080/predict');
     final request = http.MultipartRequest('POST', url);
-    request.files.add(await http.MultipartFile.fromPath(
-        'file', widget.imagePath)); 
+    request.files
+        .add(await http.MultipartFile.fromPath('file', widget.imagePath));
 
     try {
       final response = await request.send();
@@ -42,6 +45,7 @@ class _ProcessScreenState extends State<ProcessScreen> {
         final decodedResponse = jsonDecode(responseString);
         setState(() {
           _predictionResult = decodedResponse['prediction'];
+          _sendPredictionResult();
         });
       } else {
         setState(() {
@@ -52,6 +56,35 @@ class _ProcessScreenState extends State<ProcessScreen> {
       setState(() {
         _predictionResult = 'Error connect to API';
       });
+    }
+  }
+
+  Future<void> _sendPredictionResult() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      try {
+        final response = await _dio.post(
+          'https://api-data-predict-anamia.vercel.app/history',
+          data: {'result': _predictionResult},
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
+
+        if (response.statusCode == 201) {
+          print('Prediction result sent successfully');
+        } else {
+          print('Failed to send prediction result: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error sending prediction result: $e');
+      }
+    } else {
+      print('Token or email not found');
     }
   }
 

@@ -1,21 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/screen/login_register/login_screen.dart'; // Import LoginScreen
 import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferencesAsumsikan Anda memiliki WelcomeScreen
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  bool _hasToken = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkToken();
+  }
+
+  Future<void> _checkToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    setState(() {
+      _hasToken = token != null;
+    });
+  }
 
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token'); // Hapus token dari SharedPreferences
+    await prefs.remove('token');
 
-    // Navigasi ke WelcomeScreen dan hapus semua rute sebelumnya
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => WelcomeScreen()),
       (Route<dynamic> route) => false,
+    );
+  }
+
+  void _navigateToLogin(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WelcomeScreen()),
     );
   }
 
@@ -70,10 +99,17 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 32),
                 TextButton(
-                  // Mengganti Text dengan TextButton agar bisa ditekan
-                  onPressed: () => _logout(context),
-                  child: Text("Logout"),
+                  onPressed: _hasToken
+                      ? () => _logout(context)
+                      : () => _navigateToLogin(context),
+                  child: Text(
+                    _hasToken ? "Logout" : "Login",
+                    style: TextStyleConstant.montserratBold.copyWith(
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ],
             ),
