@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
+import 'package:predict_anemia/view/welcome/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AboutScreen extends StatefulWidget {

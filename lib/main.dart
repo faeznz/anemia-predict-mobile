@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:predict_anemia/screen/splash/splash_screen.dart';
+import 'package:predict_anemia/view/splash/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());

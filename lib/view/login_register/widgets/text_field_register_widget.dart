@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/model/user_model.dart';
-import 'package:predict_anemia/screen/login_register/login_screen.dart';
+import 'package:predict_anemia/view/login_register/login_screen.dart';
 
 class TextFieldRegisterWidget extends StatefulWidget {
   const TextFieldRegisterWidget({super.key});

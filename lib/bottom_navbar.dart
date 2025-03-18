@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
-import 'package:predict_anemia/screen/about/about_screen.dart';
-import 'package:predict_anemia/screen/history/hostory_screen.dart';
-import 'package:predict_anemia/screen/home/home_screen.dart';
+import 'package:predict_anemia/view/about/about_screen.dart';
+import 'package:predict_anemia/view/history/hostory_screen.dart';
+import 'package:predict_anemia/view/home/home_screen.dart';
 
 class MyButtomNavbar extends StatefulWidget {
   const MyButtomNavbar({super.key});

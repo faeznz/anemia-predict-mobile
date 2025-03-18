@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:predict_anemia/screen/home/widgets/button_camera_widget.dart';
-import 'package:predict_anemia/screen/home/widgets/heading_home_widget.dart';
+import 'package:predict_anemia/view/home/widgets/button_camera_widget.dart';
+import 'package:predict_anemia/view/home/widgets/heading_home_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

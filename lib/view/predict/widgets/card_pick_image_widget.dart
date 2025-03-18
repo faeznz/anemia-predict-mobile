@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/predict/process_screen.dart';
+import 'package:predict_anemia/view/predict/process_screen.dart';
 
 class CardPickImageWidget extends StatefulWidget {
   const CardPickImageWidget({super.key});

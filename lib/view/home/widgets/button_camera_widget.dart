@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/predict/scan_screen.dart';
+import 'package:predict_anemia/view/predict/scan_screen.dart';
 
 class ButtonCameraWidget extends StatefulWidget {
   const ButtonCameraWidget({super.key});

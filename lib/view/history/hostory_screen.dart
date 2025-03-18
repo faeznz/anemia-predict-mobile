@@ -40,7 +40,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Future<void> _fetchHistory(String token) async {
     try {
       final response = await _dio.get(
-        'https://api-data-predict-anamia.vercel.app//history/email',
+        'https://api-data-predict-anamia.vercel.app/history/email',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

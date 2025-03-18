@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:predict_anemia/screen/predict/widgets/card_pick_image_widget.dart';
-import 'package:predict_anemia/screen/predict/widgets/header_pick_image_widget.dart';
+import 'package:predict_anemia/view/predict/widgets/card_pick_image_widget.dart';
+import 'package:predict_anemia/view/predict/widgets/header_pick_image_widget.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:predict_anemia/bottom_navbar.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
+import 'package:predict_anemia/view/welcome/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,13 +27,11 @@ class _SplashScreenState extends State<SplashScreen> {
     final token = prefs.getString('token');
 
     if (token != null) {
-      // Token exists, navigate to HomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MyButtomNavbar()),
       );
     } else {
-      // No token, navigate to WelcomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeScreen()),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/screen/login_register/widgets/divider_login_widget.dart';
-import 'package:predict_anemia/screen/login_register/widgets/google_button_widget.dart';
-import 'package:predict_anemia/screen/login_register/widgets/text_field_register_widget.dart';
+import 'package:predict_anemia/view/login_register/widgets/divider_login_widget.dart';
+import 'package:predict_anemia/view/login_register/widgets/google_button_widget.dart';
+import 'package:predict_anemia/view/login_register/widgets/text_field_register_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
