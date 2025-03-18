@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/screen/welcome/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferencesAsumsikan Anda memiliki WelcomeScreen
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+  const AboutScreen({Key? key}) : super(key: key);
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Hapus token dari SharedPreferences
+
+    // Navigasi ke WelcomeScreen dan hapus semua rute sebelumnya
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      (Route<dynamic> route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +69,12 @@ class AboutScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
+                TextButton(
+                  // Mengganti Text dengan TextButton agar bisa ditekan
+                  onPressed: () => _logout(context),
+                  child: Text("Logout"),
+                ),
               ],
             ),
           ),

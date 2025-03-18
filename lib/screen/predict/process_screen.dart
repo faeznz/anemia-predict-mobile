@@ -10,12 +10,10 @@ import 'package:predict_anemia/screen/predict/widgets/header_process_image_widge
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
-  // final String apiUrl;
 
   const ProcessScreen({
     super.key,
     required this.imagePath,
-    // required this.apiUrl,
   });
 
   @override
@@ -23,40 +21,34 @@ class ProcessScreen extends StatefulWidget {
 }
 
 class _ProcessScreenState extends State<ProcessScreen> {
-  String? _predictionResult; // To store the prediction result
+  String? _predictionResult;
 
   @override
   void initState() {
     super.initState();
-    _predictAnemia(); // Call the prediction function when the widget initializes
+    _predictAnemia();
   }
 
   Future<void> _predictAnemia() async {
-    final url = Uri.parse('https://predictanemia.sensrvr.my.id/predict');
+    final url = Uri.parse('http://10.0.2.2:8080/predict');
     final request = http.MultipartRequest('POST', url);
     request.files.add(await http.MultipartFile.fromPath(
-        'file', widget.imagePath)); // Ubah 'image' menjadi 'file'
+        'file', widget.imagePath)); 
 
     try {
       final response = await request.send();
       if (response.statusCode == 200) {
         final responseString = await response.stream.bytesToString();
-        //  Decode the JSON response
         final decodedResponse = jsonDecode(responseString);
         setState(() {
-          //  Extract the prediction from the decoded response
           _predictionResult = decodedResponse['prediction'];
         });
       } else {
-        // Handle error responses
-        print('Error: ${response.statusCode}');
         setState(() {
           _predictionResult = 'Error connect to API';
         });
       }
     } catch (e) {
-      // Handle exceptions
-      print('Error: $e');
       setState(() {
         _predictionResult = 'Error connect to API';
       });

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:predict_anemia/bottom_navbar.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/model/login_model.dart';
-import 'package:predict_anemia/screen/home/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TextFieldLoginWidget extends StatefulWidget {
@@ -46,7 +46,7 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
 
       // Replace with your actual API endpoint
       final response = await dio.post(
-        'http://10.0.2.2:8080/auth/login',
+        'http://10.0.2.2:4040/auth/login',
         data: loginModel.toJson(),
       );
 
@@ -58,9 +58,9 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => const MyButtomNavbar(),
           ),
-          (Route<dynamic> route) => false, 
+          (Route<dynamic> route) => false,
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
