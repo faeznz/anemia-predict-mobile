@@ -11,7 +11,7 @@ import 'package:predict_anemia/screen/predict/widgets/header_process_image_widge
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
-import 'package:intl/intl.dart'; // Import intl package
+import 'package:intl/intl.dart'; 
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
