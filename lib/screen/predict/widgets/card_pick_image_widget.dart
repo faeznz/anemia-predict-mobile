@@ -16,7 +16,7 @@ class CardPickImageWidget extends StatefulWidget {
 class _CardPickImageWidgetState extends State<CardPickImageWidget> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
-  String _customApiIp = '10.0.2.2'; // Default IP
+  String _customApiIp = '192.168.';
 
   Future<void> _openCamera() async {
     try {
@@ -195,6 +195,41 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
               ),
             ),
           ),
+          const SizedBox(height: 12),
+          const Divider(),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/images/ex-pict.png',
+                width: 150,
+                height: 250,
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "Contoh Pengambilan Gambar",
+                      style: TextStyleConstant.montserratBold.copyWith(
+                        color: ColorConstant.primaryColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Pastikan telapak tangan memenuhi frame kamera dan pencahayaan cukup. Jangan gunakan flash kamera!",
+                      style: TextStyleConstant.montserratNormal.copyWith(
+                        fontSize: 14,
+                        color: ColorConstant.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
