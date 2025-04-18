@@ -16,7 +16,7 @@ class CardPickImageWidget extends StatefulWidget {
 class _CardPickImageWidgetState extends State<CardPickImageWidget> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
-  String _customApiIp = '192.168.';
+  // String _customApiIp = '192.168.';
 
   Future<void> _openCamera() async {
     try {
@@ -44,23 +44,23 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
             ),
           ),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: TextFormField(
-              initialValue: _customApiIp,
-              decoration: InputDecoration(
-                labelText: 'Custom API IP',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _customApiIp = value;
-                });
-              },
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          //   child: TextFormField(
+          //     initialValue: _customApiIp,
+          //     decoration: InputDecoration(
+          //       labelText: 'Custom API IP',
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //     ),
+          //     onChanged: (value) {
+          //       setState(() {
+          //         _customApiIp = value;
+          //       });
+          //     },
+          //   ),
+          // ),
           const SizedBox(height: 20),
           Container(
             width: double.infinity,
@@ -163,8 +163,8 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                                 MaterialPageRoute(
                                   builder: (context) => ProcessScreen(
                                     imagePath: _imageFile!.path,
-                                    customApiIp:
-                                        _customApiIp, // Kirim IP custom
+                                    // customApiIp:
+                                    //     _customApiIp, // Kirim IP custom
                                   ),
                                 ),
                               );

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/view/login_register/account/account_screen.dart';
+import 'package:predict_anemia/view/welcome/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HeadingHomeWidget extends StatefulWidget {
   const HeadingHomeWidget({super.key});
@@ -10,6 +14,23 @@ class HeadingHomeWidget extends StatefulWidget {
 }
 
 class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
+  Future<void> _onProfileIconTap() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const AccountScreen()),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,11 +44,13 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
                 fontSize: 18,
               ),
             ),
-            // FaIcon(
-            //   FontAwesomeIcons.user,
-            //   color: ColorConstant.primaryColor,
-            //   size: 20,
-            // ),
+            GestureDetector(
+              onTap: _onProfileIconTap,
+              child: FaIcon(
+                FontAwesomeIcons.circleUser,
+                color: ColorConstant.primaryColor,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 24),

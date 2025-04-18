@@ -12,10 +12,16 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const HeadingHomeWidget(),
-              Image.asset('assets/images/doc_3.png'),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/doc_3.png'),
+                  ],
+                ),
+              ),
               const ButtonCameraWidget(),
             ],
           ),

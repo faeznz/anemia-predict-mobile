@@ -11,16 +11,14 @@ import 'package:predict_anemia/view/predict/widgets/header_process_image_widget.
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
-  final String? customApiIp;
 
   const ProcessScreen({
     super.key,
     required this.imagePath,
-    this.customApiIp,
   });
 
   @override
@@ -29,15 +27,12 @@ class ProcessScreen extends StatefulWidget {
 
 class _ProcessScreenState extends State<ProcessScreen> {
   String? _predictionResult;
-  Dio _dio = Dio();
-  String _apiIp = '10.0.2.2';
+  final Dio _dio = Dio();
+  final String _apiUrl = 'https://faeznz-anemia-predict.hf.space/predict';
 
   @override
   void initState() {
     super.initState();
-    if (widget.customApiIp != null) {
-      _apiIp = widget.customApiIp!;
-    }
     _processAndPredictAnemia();
   }
 
@@ -49,12 +44,12 @@ class _ProcessScreenState extends State<ProcessScreen> {
       setState(() {
         _predictionResult = 'Error processing image';
       });
-      print('Error processing image: $e');
     }
   }
 
   Future<String> _cropImage(String imagePath) async {
-    final originalImage = img.decodeImage(File(imagePath).readAsBytesSync());
+    final imageBytes = await File(imagePath).readAsBytes();
+    final originalImage = img.decodeImage(imageBytes);
 
     if (originalImage != null) {
       final width = originalImage.width;
@@ -82,22 +77,19 @@ class _ProcessScreenState extends State<ProcessScreen> {
   }
 
   Future<void> _predictAnemia(String imagePath) async {
-    final url = Uri.parse('http://$_apiIp:8080/predict');
+    final url = Uri.parse(_apiUrl);
     final request = http.MultipartRequest('POST', url);
 
-    // Kompres gambar sebelum dikirim
     List<int> compressedImageBytes = await _compressImage(imagePath);
 
-    // Dapatkan datetime saat ini dalam format yang diinginkan
     String formattedDateTime =
         DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
 
     request.files.add(
       http.MultipartFile.fromBytes(
-        'file',
+        'image',
         compressedImageBytes,
-        filename:
-            'image_$formattedDateTime.jpg', // Gunakan datetime sebagai nama file
+        filename: 'image_$formattedDateTime.jpg',
       ),
     );
 
@@ -123,11 +115,11 @@ class _ProcessScreenState extends State<ProcessScreen> {
   }
 
   Future<List<int>> _compressImage(String imagePath) async {
-    final originalImage = img.decodeImage(File(imagePath).readAsBytesSync());
+    final imageBytes = await File(imagePath).readAsBytes();
+    final originalImage = img.decodeImage(imageBytes);
 
     if (originalImage != null) {
-      // Kompres gambar dengan kualitas 80 (0-100)
-      List<int> compressedBytes = img.encodeJpg(originalImage, quality: 60);
+      List<int> compressedBytes = img.encodeJpg(originalImage, quality: 40);
       return compressedBytes;
     } else {
       throw Exception('Failed to decode image for compression');
@@ -151,7 +143,6 @@ class _ProcessScreenState extends State<ProcessScreen> {
         );
 
         if (response.statusCode == 201) {
-          print('Prediction result sent successfully');
         } else {
           print('Failed to send prediction result: ${response.statusCode}');
         }

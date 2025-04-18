@@ -30,7 +30,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (token != null) {
       _hasToken = true;
-      await _fetchHistory(token); // Hanya mengirim token
+      await _fetchHistory(token);
     } else {
       _isLoading = false;
     }
@@ -74,16 +74,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             children: [
               const SizedBox(height: 24),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Riwayat',
-                  style: TextStyleConstant.montserratBlack.copyWith(
-                    fontSize: 28,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Riwayat',
+                    style: TextStyleConstant.montserratBlack.copyWith(
+                      fontSize: 28,
+                    ),
                   ),
                 ),
               ),
@@ -93,7 +96,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               else if (!_hasToken)
                 const Expanded(
                   child: Center(
-                    child: Text('Login untuk melihat history'),
+                    child: Text('Masuk untuk melihat history'),
                   ),
                 )
               else
