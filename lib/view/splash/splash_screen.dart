@@ -26,6 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
+    if (!mounted) return;
+
     if (token != null) {
       Navigator.pushReplacement(
         context,

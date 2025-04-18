@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
@@ -30,8 +31,9 @@ class _AccountScreenState extends State<AccountScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
+    if (!mounted) return;
+
     if (token == null) {
-      // Token tidak ditemukan, redirect ke welcome
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const WelcomeScreen()),
@@ -40,7 +42,7 @@ class _AccountScreenState extends State<AccountScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:4040/users/profile'),
+      Uri.parse('https://api-data-predict-anamia.vercel.app/users/profile'),
       headers: {
         'Authorization': 'Bearer $token',
       },

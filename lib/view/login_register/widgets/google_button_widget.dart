@@ -10,35 +10,25 @@ class GoogleButtonWidget extends StatelessWidget {
 
   Future<void> _handleGoogleLogin(BuildContext context) async {
     try {
-      print("Send Auth Google Request");
-      // Redirect ke halaman login Google
       final result = await FlutterWebAuth2.authenticate(
         url: 'https://api-data-predict-anamia.vercel.app/auth/google',
         callbackUrlScheme: 'myapp',
       );
 
-      // Debug result
-      print("Callback URL: $result");
-
-      // Ambil query dari URL redirect yang diterima dan ambil token
       final token = Uri.parse(result).queryParameters['token'];
-      print("Extracted token: $token");
 
       if (token != null) {
-        // Simpan token ke SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
 
-        // Navigasi ke halaman Home setelah login berhasil
+        if (!context.mounted) return;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const MyButtomNavbar()),
           (route) => false,
         );
       }
-    } catch (e) {
-      print("Login error: $e");
-    }
+    } catch (_) {}
   }
 
   @override

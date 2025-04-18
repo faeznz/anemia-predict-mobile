@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
+import 'package:predict_anemia/view/predict/widgets/button_result_widget.dart';
 import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/connection_lost_result_widget.dart';
 import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/good_result_widget.dart';
 import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/warning_result_widget.dart';
@@ -207,7 +208,12 @@ class _ProcessScreenState extends State<ProcessScreen> {
                   ),
                 ),
               ),
-            )
+            ),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.all(32),
+              child: ButtonResultWidget(),
+            ),
           ],
         ),
       ),

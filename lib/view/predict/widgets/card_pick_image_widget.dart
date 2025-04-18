@@ -25,9 +25,7 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
       setState(() {
         _imageFile = pickedFile;
       });
-    } catch (e) {
-      print("Error picking image: $e");
-    }
+    } catch (_) {}
   }
 
   @override
@@ -37,30 +35,12 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
       child: Column(
         children: [
           Text(
-            'Pastikan telapak tangan kamu memenuhi frame kamera',
+            'Ayo cek kondisi kamu dengan mengambil gambar dari kamera atau galeri!',
             style: TextStyleConstant.montserratBold.copyWith(
               color: ColorConstant.secondaryColor,
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 20),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          //   child: TextFormField(
-          //     initialValue: _customApiIp,
-          //     decoration: InputDecoration(
-          //       labelText: 'Custom API IP',
-          //       border: OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(12),
-          //       ),
-          //     ),
-          //     onChanged: (value) {
-          //       setState(() {
-          //         _customApiIp = value;
-          //       });
-          //     },
-          //   ),
-          // ),
           const SizedBox(height: 20),
           Container(
             width: double.infinity,
@@ -83,7 +63,7 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                     )
                   else
                     Text(
-                      "Silahkan ambil gambar",
+                      "Upload foto telapak tangan kamu",
                       style: TextStyleConstant.montserratNormal.copyWith(
                         color: ColorConstant.whiteColor,
                         fontSize: 14,
@@ -91,42 +71,80 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                     ),
                   const SizedBox(height: 20),
                   if (_imageFile == null)
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: _openCamera,
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              ColorConstant.whiteColor,
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _openCamera,
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                ColorConstant.whiteColor,
+                              ),
                             ),
-                          ),
-                          child: FaIcon(
-                            FontAwesomeIcons.camera,
-                            color: ColorConstant.primaryColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.camera,
+                                    color: ColorConstant.primaryColor,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    'Ambil Gambar',
+                                    style: TextStyleConstant.montserratBold
+                                        .copyWith(
+                                      fontSize: 16,
+                                      color: ColorConstant.primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 20),
-                        ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              final XFile? pickedFile = await _picker.pickImage(
-                                  source: ImageSource.gallery);
-                              setState(() {
-                                _imageFile = pickedFile;
-                              });
-                            } catch (e) {
-                              print("Error picking image: $e");
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              ColorConstant.whiteColor,
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                final XFile? pickedFile = await _picker
+                                    .pickImage(source: ImageSource.gallery);
+                                setState(() {
+                                  _imageFile = pickedFile;
+                                });
+                              } catch (_) {}
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                ColorConstant.whiteColor,
+                              ),
                             ),
-                          ),
-                          child: FaIcon(
-                            FontAwesomeIcons.image,
-                            color: ColorConstant.primaryColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.image,
+                                    color: ColorConstant.primaryColor,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    'Upload Gambar',
+                                    style: TextStyleConstant.montserratBold
+                                        .copyWith(
+                                      fontSize: 16,
+                                      color: ColorConstant.primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -163,16 +181,15 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                                 MaterialPageRoute(
                                   builder: (context) => ProcessScreen(
                                     imagePath: _imageFile!.path,
-                                    // customApiIp:
-                                    //     _customApiIp, // Kirim IP custom
                                   ),
                                 ),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text(
-                                        'Silakan pilih gambar terlebih dahulu')),
+                                  content: Text(
+                                      'Silakan pilih gambar terlebih dahulu'),
+                                ),
                               );
                             }
                           },
@@ -198,30 +215,68 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 12),
+          Text(
+            'Ikuti langkah berikut untuk mendapatkan hasil yang lebih baik',
+            style: TextStyleConstant.montserratBold.copyWith(
+              color: ColorConstant.primaryColor,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/ex-pict.png',
-                width: 150,
-                height: 250,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/images/ex-pict.png',
+                  height: 250,
+                  fit: BoxFit.cover,
+                ),
               ),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Contoh Pengambilan Gambar",
+                      "Tips Penggunaan:",
                       style: TextStyleConstant.montserratBold.copyWith(
-                        color: ColorConstant.primaryColor,
-                        fontSize: 16,
+                        fontSize: 14,
+                        color: ColorConstant.secondaryColor,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 10),
                     Text(
-                      "Pastikan telapak tangan memenuhi frame kamera dan pencahayaan cukup. Jangan gunakan flash kamera!",
+                      "- Pastikan telapak tangan memenuhi frame kamera dan pencahayaan cukup.",
                       style: TextStyleConstant.montserratNormal.copyWith(
                         fontSize: 14,
-                        color: ColorConstant.primaryColor,
+                        color: ColorConstant.secondaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "- Jangan gunakan flash kamera!",
+                      style: TextStyleConstant.montserratNormal.copyWith(
+                        fontSize: 14,
+                        color: ColorConstant.secondaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "- Disarankan tidak melakukan zoom pada kamera.",
+                      style: TextStyleConstant.montserratNormal.copyWith(
+                        fontSize: 14,
+                        color: ColorConstant.secondaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "*Untuk mendapatkan hasil yang lebih baik, ambil gambar diluar ruangan dengan cahaya natural.",
+                      style: TextStyleConstant.montserratNormal.copyWith(
+                        fontSize: 12,
+                        color: ColorConstant.secondaryColor,
                       ),
                     ),
                   ],

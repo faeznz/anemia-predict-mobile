@@ -59,6 +59,8 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
         data: userModel.toJson(),
       );
 
+      if (!mounted) return;
+
       if (response.statusCode == 201) {
         // Registration successful
         ScaffoldMessenger.of(context).showSnackBar(

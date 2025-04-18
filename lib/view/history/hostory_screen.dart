@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -16,7 +16,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   List<Map<String, dynamic>> _riwayatData = [];
   bool _isLoading = true;
   bool _hasToken = false;
-  Dio _dio = Dio();
+  final Dio _dio = Dio();
 
   @override
   void initState() {
@@ -38,35 +38,44 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> _fetchHistory(String token) async {
-    try {
-      final response = await _dio.get(
-        'https://api-data-predict-anamia.vercel.app/history/email',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      );
+    int retryCount = 0;
+    const maxRetries = 3;
+    const retryDelay = Duration(seconds: 2);
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        _riwayatData = data.map((item) {
-          return {
-            'tanggal': DateFormat('dd MMMM yyyy - HH:mm')
-                .format(DateTime.parse(item['datetime'])),
-            'hasil': item['result'],
-            'status': item['result'] == 'Tidak Anemia',
-          };
-        }).toList();
-      } else {
-        print('Failed to fetch history: ${response.statusCode}');
+    while (retryCount < maxRetries) {
+      try {
+        final response = await _dio.get(
+          'https://api-data-predict-anamia.vercel.app/history/email',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          final List<dynamic> data = response.data;
+          _riwayatData = data.map((item) {
+            return {
+              'tanggal': DateFormat('dd MMMM yyyy - HH:mm')
+                  .format(DateTime.parse(item['datetime'])),
+              'hasil': item['result'],
+              'status': item['result'] == 'Tidak Anemia',
+            };
+          }).toList();
+          break;
+        }
+      } catch (e) {
+        retryCount++;
+
+        if (retryCount < maxRetries) {
+          await Future.delayed(retryDelay);
+        }
       }
-    } catch (e) {
-      print('Error fetching history: $e');
-    } finally {
-      _isLoading = false;
-      setState(() {});
     }
+
+    _isLoading = false;
+    setState(() {});
   }
 
   @override
@@ -94,50 +103,70 @@ class _HistoryScreenState extends State<HistoryScreen> {
               if (_isLoading)
                 const CircularProgressIndicator()
               else if (!_hasToken)
-                const Expanded(
+                Expanded(
                   child: Center(
-                    child: Text('Masuk untuk melihat history'),
+                    child: Text(
+                      'Data kamu kosong',
+                      style: TextStyleConstant.montserratNormal.copyWith(
+                        color: ColorConstant.secondaryColor,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
                 )
               else
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: _riwayatData.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final riwayat = _riwayatData[index];
-                      return ListTile(
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: riwayat['status']
-                                ? ColorConstant.secureColor
-                                : ColorConstant.warningColor,
-                            borderRadius: BorderRadius.circular(8),
+                  child: _riwayatData.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data kamu kosong',
+                            style: TextStyleConstant.montserratNormal.copyWith(
+                              color: ColorConstant.secondaryColor,
+                              fontSize: 14,
+                            ),
                           ),
-                          child: Icon(
-                            riwayat['status'] ? Icons.check : Icons.warning,
-                            color: Colors.white,
-                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: _riwayatData.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final riwayat = _riwayatData[index];
+                            return ListTile(
+                              leading: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: riwayat['status']
+                                      ? ColorConstant.secureColor
+                                      : ColorConstant.warningColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  riwayat['status']
+                                      ? Icons.check
+                                      : Icons.warning,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              title: Text(
+                                riwayat['tanggal'],
+                                style:
+                                    TextStyleConstant.montserratBold.copyWith(
+                                  color: ColorConstant.secondaryColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              subtitle: Text(
+                                riwayat['hasil'],
+                                style:
+                                    TextStyleConstant.montserratNormal.copyWith(
+                                  color: ColorConstant.secondaryColor,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        title: Text(
-                          riwayat['tanggal'],
-                          style: TextStyleConstant.montserratBold.copyWith(
-                            color: ColorConstant.secondaryColor,
-                            fontSize: 14,
-                          ),
-                        ),
-                        subtitle: Text(
-                          riwayat['hasil'],
-                          style: TextStyleConstant.montserratNormal.copyWith(
-                            color: ColorConstant.secondaryColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                )
             ],
           ),
         ),

@@ -18,6 +18,8 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
+    if (!mounted) return;
+
     if (token != null && token.isNotEmpty) {
       Navigator.push(
         context,

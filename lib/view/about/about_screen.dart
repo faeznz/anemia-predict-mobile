@@ -1,50 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/view/welcome/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
 
   @override
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  bool _hasToken = false;
-
   @override
   void initState() {
     super.initState();
-    _checkToken();
-  }
-
-  Future<void> _checkToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    setState(() {
-      _hasToken = token != null;
-    });
-  }
-
-  Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => WelcomeScreen()),
-      (Route<dynamic> route) => false,
-    );
-  }
-
-  void _navigateToLogin(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => WelcomeScreen()),
-    );
   }
 
   @override
@@ -63,53 +31,71 @@ class _AboutScreenState extends State<AboutScreen> {
                     style: TextStyleConstant.montserratBlack,
                   ),
                   Text(
-                    'Versi 1.0.0',
+                    'Versi 1.1.0',
                     style: TextStyleConstant.montserratNormal.copyWith(
                       color: ColorConstant.primaryColor,
                       fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: ColorConstant.primaryColor,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(12),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Tentang',
-                            style: TextStyleConstant.montserratBlack.copyWith(
-                              color: ColorConstant.whiteColor,
-                              fontSize: 18,
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Tentang Aplikasi',
+                          style: TextStyleConstant.montserratBlack.copyWith(
+                            color: ColorConstant.secondaryColor,
+                            fontSize: 14,
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Perkembangan teknologi AI dan machine learning memungkinkan deteksi dini anemia secara non-invasif melalui analisis citra telapak tangan menggunakan perangkat mobile. Metode ini lebih efisien dan mudah diakses daripada metode konvensional, terutama di daerah dengan keterbatasan layanan kesehatan. Deep learning, khususnya CNN, efektif untuk ekstraksi fitur dari gambar telapak tangan, dan dikombinasikan dengan algoritma machine learning seperti k-NN, Naïve Bayes, SVM, dan Decision Tree, serta teknik ensemble learning, dapat menghasilkan model prediksi anemia dengan akurasi tinggi. Implementasi pada perangkat mobile dengan TensorFlow Lite memungkinkan deteksi real-time,  aksesibilitas tinggi, dan penggunaan offline, sehingga  berpotensi meningkatkan kualitas hidup dan kesadaran masyarakat terhadap anemia.',
-                            style: TextStyleConstant.montserratNormal,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Perkembangan teknologi AI dan machine learning memungkinkan deteksi dini anemia secara non-invasif melalui analisis citra telapak tangan menggunakan perangkat mobile. Deteksi ini dimungkinkan karena telapak tangan mengandung pembuluh darah kapiler yang dapat mencerminkan tingkat hemoglobin dalam darah. Perubahan warna atau pola pada telapak tangan dapat menjadi indikator visual dari kadar hemoglobin yang rendah, salah satu ciri utama anemia. Metode ini lebih efisien dan mudah diakses dibandingkan metode konvensional seperti pemeriksaan darah, terutama di daerah dengan keterbatasan layanan kesehatan. Implementasi teknologi ini pada perangkat mobile memungkinkan deteksi real-time, aksesibilitas tinggi, dan penggunaan secara offline, sehingga berpotensi meningkatkan kesadaran dan kualitas hidup masyarakat terkait kondisi anemia.',
+                          style: TextStyleConstant.montserratNormal.copyWith(
+                            color: ColorConstant.secondaryColor,
                           ),
-                        ],
-                      ),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  TextButton(
-                    onPressed: _hasToken
-                        ? () => _logout(context)
-                        : () => _navigateToLogin(context),
-                    child: Text(
-                      _hasToken ? "Logout" : "Login",
-                      style: TextStyleConstant.montserratBold.copyWith(
-                        fontSize: 16,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Model Machine Learning',
+                          style: TextStyleConstant.montserratBlack.copyWith(
+                            color: ColorConstant.secondaryColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Model ini menggunakan metode Convolutional Neural Network (CNN) untuk mengekstraksi fitur visual dari citra telapak tangan yang berkaitan dengan ciri-ciri anemia, seperti perubahan warna akibat rendahnya kadar hemoglobin. Fitur-fitur ini kemudian dianalisis menggunakan berbagai algoritma machine learning seperti k-Nearest Neighbors (k-NN), Naïve Bayes, Support Vector Machine (SVM), dan Decision Tree. Untuk meningkatkan akurasi prediksi, model juga mengadopsi teknik ensemble learning yang menggabungkan kekuatan dari beberapa algoritma. \n \n Dataset yang digunakan dalam pengembangan model ini berasal dari penelitian oleh Asare, Justice Williams; Appiahene, Peter; dan Donkoh, Emmanuel (2022), berjudul "Anemia Detection using Palpable Palm Image Datasets from Ghana", yang tersedia melalui Mendeley Data (V1), dengan DOI: 10.17632/ccr8cm22vz.1. Dataset ini terdiri dari citra telapak tangan masyarakat Ghana yang digunakan sebagai dasar pelatihan dan evaluasi model deteksi anemia secara non-invasif.',
+                          style: TextStyleConstant.montserratNormal.copyWith(
+                            color: ColorConstant.secondaryColor,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
                     ),
+                  ),
+                  const SizedBox(height: 56),
+                  Text(
+                    'Develop by',
+                    style: TextStyleConstant.montserratNormal.copyWith(
+                      color: ColorConstant.secondaryColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Image.asset(
+                    'assets/icons/faeznz_logo.png',
+                    width: 100,
                   ),
                 ],
               ),
