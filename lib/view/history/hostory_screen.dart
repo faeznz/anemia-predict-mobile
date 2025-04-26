@@ -4,6 +4,7 @@ import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -41,11 +42,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
     int retryCount = 0;
     const maxRetries = 3;
     const retryDelay = Duration(seconds: 2);
+    await dotenv.load();
+
+    final baseUrl = dotenv.get('BASE_URL');
+    final url = '$baseUrl/history';
 
     while (retryCount < maxRetries) {
       try {
         final response = await _dio.get(
-          'https://api-data-predict-anamia.vercel.app/history/email',
+          url,
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
@@ -58,7 +63,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           _riwayatData = data.map((item) {
             return {
               'tanggal': DateFormat('dd MMMM yyyy - HH:mm')
-                  .format(DateTime.parse(item['datetime'])),
+                  .format(DateTime.parse(item['created_at'])),
               'hasil': item['result'],
               'status': item['result'] == 'Tidak Anemia',
             };

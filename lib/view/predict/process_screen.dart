@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ProcessScreen extends StatefulWidget {
   final String imagePath;
@@ -29,7 +30,6 @@ class ProcessScreen extends StatefulWidget {
 class _ProcessScreenState extends State<ProcessScreen> {
   String? _predictionResult;
   final Dio _dio = Dio();
-  final String _apiUrl = 'https://faeznz-anemia-predict.hf.space/predict';
 
   @override
   void initState() {
@@ -78,7 +78,10 @@ class _ProcessScreenState extends State<ProcessScreen> {
   }
 
   Future<void> _predictAnemia(String imagePath) async {
-    final url = Uri.parse(_apiUrl);
+    await dotenv.load();
+    final predictUrl = dotenv.get('PREDICT_URL');
+    final apiUrl = '$predictUrl/predict';
+    final url = Uri.parse(apiUrl);
     final request = http.MultipartRequest('POST', url);
 
     List<int> compressedImageBytes = await _compressImage(imagePath);
@@ -131,10 +134,14 @@ class _ProcessScreenState extends State<ProcessScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
+    await dotenv.load();
+    final baseUrl = dotenv.get('BASE_URL');
+    final url = '$baseUrl/history';
+
     if (token != null) {
       try {
         final response = await _dio.post(
-          'https://api-data-predict-anamia.vercel.app/history',
+          url,
           data: {'result': _predictionResult},
           options: Options(
             headers: {

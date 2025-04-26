@@ -4,6 +4,7 @@ import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/model/user_model.dart';
 import 'package:predict_anemia/view/login_register/login_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TextFieldRegisterWidget extends StatefulWidget {
   const TextFieldRegisterWidget({super.key});
@@ -52,10 +53,13 @@ class _TextFieldRegisterWidgetState extends State<TextFieldRegisterWidget> {
 
     try {
       final dio = Dio();
+      await dotenv.load();
+      final baseUrl = dotenv.get('BASE_URL');
+      final url = '$baseUrl/auth/register';
 
       // Replace with your actual API endpoint
       final response = await dio.post(
-        'https://api-data-predict-anamia.vercel.app/auth/register',
+        url,
         data: userModel.toJson(),
       );
 

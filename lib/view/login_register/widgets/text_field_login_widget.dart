@@ -5,6 +5,7 @@ import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/model/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TextFieldLoginWidget extends StatefulWidget {
   const TextFieldLoginWidget({super.key});
@@ -48,10 +49,13 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
     try {
       // Create a Dio instance
       final dio = Dio();
+      await dotenv.load();
+      final baseUrl = dotenv.get('BASE_URL');
+      final url = '$baseUrl/auth/login';
 
       // Replace with your actual API endpoint
       final response = await dio.post(
-        'https://api-data-predict-anamia.vercel.app/auth/login',
+        url,
         data: loginModel.toJson(),
       );
 
