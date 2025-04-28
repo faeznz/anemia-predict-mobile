@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
+import 'package:predict_anemia/view/login_register/account/widgets/button_edit_widget.dart';
 import 'package:predict_anemia/view/login_register/account/widgets/button_logout_widget.dart';
 import 'package:predict_anemia/view/login_register/account/widgets/header_account_widget.dart';
 import 'package:predict_anemia/view/welcome/welcome_screen.dart';
@@ -59,6 +60,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
       if (response.statusCode == 200) {
         final data = response.data;
+        await prefs.setString('avatarUrl', data['avatar_url']);
         setState(() {
           name = data['name'];
           email = data['email'];
@@ -68,9 +70,7 @@ class _AccountScreenState extends State<AccountScreen> {
         });
       }
     } on DioException catch (e) {
-      // Handle Dio-specific errors
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        // Jika token invalid atau error lainnya, logout otomatis
         await prefs.remove('token');
         if (mounted) {
           Navigator.pushReplacement(
@@ -114,23 +114,23 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          children: [
-                            avatarUrl != null && avatarUrl!.isNotEmpty
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Center(
+                        Center(
+                          child: Column(
+                            children: [
+                              avatarUrl != null && avatarUrl!.isNotEmpty
+                                  ? ClipOval(
                                       child: Image.network(
                                         avatarUrl!,
-                                        width: 80,
-                                        height: 80,
+                                        width: 100,
+                                        height: 100,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
-                                          return Icon(Icons.person,
-                                              size: 40,
-                                              color:
-                                                  ColorConstant.secondaryColor);
+                                          return Icon(
+                                            Icons.person,
+                                            size: 40,
+                                            color: ColorConstant.secondaryColor,
+                                          );
                                         },
                                         loadingBuilder:
                                             (context, child, loadingProgress) {
@@ -149,17 +149,17 @@ class _AccountScreenState extends State<AccountScreen> {
                                           );
                                         },
                                       ),
+                                    )
+                                  : Text(
+                                      ' ',
+                                      style: TextStyleConstant.montserratNormal
+                                          .copyWith(
+                                        fontSize: 20,
+                                        color: ColorConstant.secondaryColor,
+                                      ),
                                     ),
-                                  )
-                                : Text(
-                                    'No Image',
-                                    style: TextStyleConstant.montserratNormal
-                                        .copyWith(
-                                      fontSize: 20,
-                                      color: ColorConstant.secondaryColor,
-                                    ),
-                                  ),
-                          ],
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 20),
                         Text(
@@ -197,7 +197,21 @@ class _AccountScreenState extends State<AccountScreen> {
                           ),
                         ),
                         Text(
-                          gender ?? '',
+                          gender ?? '-',
+                          style: TextStyleConstant.montserratNormal.copyWith(
+                            fontSize: 20,
+                            color: ColorConstant.secondaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Password',
+                          style: TextStyleConstant.montserratBold.copyWith(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '********',
                           style: TextStyleConstant.montserratNormal.copyWith(
                             fontSize: 20,
                             color: ColorConstant.secondaryColor,
@@ -210,7 +224,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   const Spacer(),
                   const Padding(
                     padding: EdgeInsets.all(32),
-                    child: ButtonLogoutWidget(),
+                    child: Column(
+                      children: [
+                        // ButtonEditWidget(),
+                        SizedBox(height: 8),
+                        ButtonLogoutWidget(),
+                      ],
+                    ),
                   ),
                 ],
               ),

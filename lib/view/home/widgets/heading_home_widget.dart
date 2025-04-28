@@ -14,6 +14,22 @@ class HeadingHomeWidget extends StatefulWidget {
 }
 
 class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
+  String? avatarUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAvatarUrl();
+  }
+
+  // Mengambil avatarUrl dari SharedPreferences
+  Future<void> _loadAvatarUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      avatarUrl = prefs.getString('avatarUrl'); // Mendapatkan avatarUrl
+    });
+  }
+
   Future<void> _onProfileIconTap() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -48,10 +64,38 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
             ),
             GestureDetector(
               onTap: _onProfileIconTap,
-              child: FaIcon(
-                FontAwesomeIcons.circleUser,
-                color: ColorConstant.primaryColor,
-              ),
+              child: avatarUrl != null && avatarUrl!.isNotEmpty
+                  ? Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: ColorConstant.primaryColor,
+                          width: 2,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          avatarUrl!,
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.person,
+                              size: 30,
+                              color: ColorConstant.primaryColor,
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : FaIcon(
+                      FontAwesomeIcons.circleUser,
+                      color: ColorConstant.primaryColor,
+                    ),
             ),
           ],
         ),

@@ -61,8 +61,11 @@ class _TextFieldLoginWidgetState extends State<TextFieldLoginWidget> {
 
       if (response.statusCode == 200) {
         final token = response.data['token'];
+        final avatarUrl = response.data['user']['avatarUrl'];
 
         await prefs.setString('token', token);
+        await prefs.setString('avatarUrl', avatarUrl);
+        print(avatarUrl);
 
         Navigator.pushAndRemoveUntil(
           context,
