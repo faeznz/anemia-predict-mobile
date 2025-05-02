@@ -58,7 +58,7 @@ class _AboutScreenState extends State<AboutScreen> {
                         ),
                       ),
                       Text(
-                        'Versi 1.2.0',
+                        'Versi 1.3.0',
                         style: TextStyleConstant.montserratNormal.copyWith(
                           color: ColorConstant.whiteColor,
                           fontSize: 14,

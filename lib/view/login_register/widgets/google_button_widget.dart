@@ -5,6 +5,7 @@ import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
 
 class GoogleButtonWidget extends StatelessWidget {
   const GoogleButtonWidget({super.key});
@@ -20,11 +21,21 @@ class GoogleButtonWidget extends StatelessWidget {
         callbackUrlScheme: 'myapp',
       );
 
-      final token = Uri.parse(result).queryParameters['token'];
+      final uri = Uri.parse(result);
+      final token = uri.queryParameters['token'];
+      final userJsonEncoded = uri.queryParameters['user'];
 
-      if (token != null) {
+      if (token != null && userJsonEncoded != null) {
+        final userJson = Uri.decodeComponent(userJsonEncoded);
+        final userMap = jsonDecode(userJson);
+
+        final avatarUrl = userMap['avatarUrl'];
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
+        if (avatarUrl != null) {
+          await prefs.setString('avatarUrl', avatarUrl);
+        }
 
         if (!context.mounted) return;
         Navigator.pushAndRemoveUntil(

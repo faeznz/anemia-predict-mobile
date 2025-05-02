@@ -15,6 +15,7 @@ class _ButtonLogoutWidgetState extends State<ButtonLogoutWidget> {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+    await prefs.remove('avatarUrl');
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const WelcomeScreen()),

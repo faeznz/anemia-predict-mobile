@@ -22,11 +22,10 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
     _loadAvatarUrl();
   }
 
-  // Mengambil avatarUrl dari SharedPreferences
   Future<void> _loadAvatarUrl() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      avatarUrl = prefs.getString('avatarUrl'); // Mendapatkan avatarUrl
+      avatarUrl = prefs.getString('avatarUrl');
     });
   }
 
@@ -42,6 +41,7 @@ class _HeadingHomeWidgetState extends State<HeadingHomeWidget> {
         MaterialPageRoute(builder: (_) => const AccountScreen()),
       );
     } else {
+      await prefs.remove('avatarUrl');
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const WelcomeScreen()),

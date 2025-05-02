@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
+import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/view/predict/widgets/button_result_widget.dart';
 import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/connection_lost_result_widget.dart';
 import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/good_result_widget.dart';
@@ -11,7 +11,6 @@ import 'package:predict_anemia/view/predict/widgets/hasil_prediksi/warning_resul
 import 'package:predict_anemia/view/predict/widgets/header_process_image_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -29,7 +28,8 @@ class ProcessScreen extends StatefulWidget {
 
 class _ProcessScreenState extends State<ProcessScreen> {
   String? _predictionResult;
-  final Dio _dio = Dio();
+  String? _predictionResultProbAnemia;
+  String? _predictionResultProbNonAnemia;
 
   @override
   void initState() {
@@ -39,41 +39,11 @@ class _ProcessScreenState extends State<ProcessScreen> {
 
   Future<void> _processAndPredictAnemia() async {
     try {
-      final croppedImagePath = await _cropImage(widget.imagePath);
-      await _predictAnemia(croppedImagePath);
+      await _predictAnemia(widget.imagePath);
     } catch (e) {
       setState(() {
         _predictionResult = 'Error processing image';
       });
-    }
-  }
-
-  Future<String> _cropImage(String imagePath) async {
-    final imageBytes = await File(imagePath).readAsBytes();
-    final originalImage = img.decodeImage(imageBytes);
-
-    if (originalImage != null) {
-      final width = originalImage.width;
-      final height = originalImage.height;
-      final cropSize = (width < height ? width : height) * 0.8;
-
-      final offsetX = (width - cropSize) ~/ 2;
-      final offsetY = (height - cropSize) ~/ 2;
-
-      final croppedImage = img.copyCrop(originalImage,
-          x: offsetX,
-          y: offsetY,
-          width: cropSize.toInt(),
-          height: cropSize.toInt());
-
-      final appDir = await getApplicationDocumentsDirectory();
-      final croppedImagePath =
-          '${appDir.path}/${imagePath.split('/').last.split('.').first}_cropped.jpg';
-      File(croppedImagePath).writeAsBytesSync(img.encodeJpg(croppedImage));
-
-      return croppedImagePath;
-    } else {
-      throw Exception('Failed to decode image');
     }
   }
 
@@ -83,6 +53,13 @@ class _ProcessScreenState extends State<ProcessScreen> {
     final apiUrl = '$predictUrl/predict';
     final url = Uri.parse(apiUrl);
     final request = http.MultipartRequest('POST', url);
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
 
     List<int> compressedImageBytes = await _compressImage(imagePath);
 
@@ -104,16 +81,23 @@ class _ProcessScreenState extends State<ProcessScreen> {
         final decodedResponse = jsonDecode(responseString);
         setState(() {
           _predictionResult = decodedResponse['prediction'];
-          _sendPredictionResult();
+          _predictionResultProbAnemia =
+              (decodedResponse['probability']['anemia'] * 100)
+                      .toStringAsFixed(2) +
+                  '%';
+          _predictionResultProbNonAnemia =
+              (decodedResponse['probability']['tidak_anemia'] * 100)
+                      .toStringAsFixed(2) +
+                  '%';
         });
       } else {
         setState(() {
-          _predictionResult = 'Error connect to API';
+          _predictionResult = 'Error connecting to API';
         });
       }
     } catch (e) {
       setState(() {
-        _predictionResult = 'Error connect to API';
+        _predictionResult = 'Error connecting to API';
       });
     }
   }
@@ -123,42 +107,10 @@ class _ProcessScreenState extends State<ProcessScreen> {
     final originalImage = img.decodeImage(imageBytes);
 
     if (originalImage != null) {
-      List<int> compressedBytes = img.encodeJpg(originalImage, quality: 40);
+      List<int> compressedBytes = img.encodeJpg(originalImage, quality: 30);
       return compressedBytes;
     } else {
       throw Exception('Failed to decode image for compression');
-    }
-  }
-
-  Future<void> _sendPredictionResult() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    await dotenv.load();
-    final baseUrl = dotenv.get('BASE_URL');
-    final url = '$baseUrl/history';
-
-    if (token != null) {
-      try {
-        final response = await _dio.post(
-          url,
-          data: {'result': _predictionResult},
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            },
-          ),
-        );
-
-        if (response.statusCode == 201) {
-        } else {
-          print('Failed to send prediction result: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('Error sending prediction result: $e');
-      }
-    } else {
-      print('Token or email not found');
     }
   }
 
@@ -191,19 +143,147 @@ class _ProcessScreenState extends State<ProcessScreen> {
                               Image.file(
                                 File(widget.imagePath),
                                 width: 300,
-                                height: 400,
+                                height: 300,
                                 fit: BoxFit.cover,
+                              ),
+                              const SizedBox(height: 16),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Probabilitas ',
+                                      style: TextStyleConstant.montserratBold
+                                          .copyWith(
+                                        color: ColorConstant.whiteColor,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Anemia',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          _predictionResultProbAnemia ?? '-',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Tidak Anemia',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          _predictionResultProbNonAnemia ?? '-',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ] else if (_predictionResult == 'Tidak Anemia') ...[
                               const GoodResultWidget(),
                               Image.file(
                                 File(widget.imagePath),
                                 width: 300,
-                                height: 400,
+                                height: 300,
                                 fit: BoxFit.cover,
                               ),
+                              const SizedBox(height: 16),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Probabilitas ',
+                                      style: TextStyleConstant.montserratBold
+                                          .copyWith(
+                                        color: ColorConstant.whiteColor,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Anemia',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          _predictionResultProbAnemia ?? '-',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Tidak Anemia',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          _predictionResultProbNonAnemia ?? '-',
+                                          style: TextStyleConstant
+                                              .montserratNormal
+                                              .copyWith(
+                                            color: ColorConstant.whiteColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ] else ...[
-                              const ConnectionLostResultWidget()
+                              const ConnectionLostResultWidget(),
                             ],
                           ],
                         )
