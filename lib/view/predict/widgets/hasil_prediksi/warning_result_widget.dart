@@ -30,12 +30,6 @@ class WarningResultWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Waspada!',
-                  style: TextStyleConstant.montserratBlack.copyWith(
-                    color: ColorConstant.whiteColor,
-                  ),
-                ),
-                Text(
                   'Anda terindikasi Anemia',
                   style: TextStyleConstant.montserratBold.copyWith(
                     color: ColorConstant.whiteColor,

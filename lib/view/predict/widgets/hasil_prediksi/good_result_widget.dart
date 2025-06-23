@@ -31,12 +31,6 @@ class GoodResultWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Selamat!',
-                  style: TextStyleConstant.montserratBlack.copyWith(
-                    color: ColorConstant.whiteColor,
-                  ),
-                ),
-                Text(
                   'Anda tidak terindikasi Anemia',
                   style: TextStyleConstant.montserratBold.copyWith(
                     color: ColorConstant.whiteColor,
