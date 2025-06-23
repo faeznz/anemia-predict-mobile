@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
-import 'package:predict_anemia/view/login_register/account/widgets/button_edit_widget.dart';
 import 'package:predict_anemia/view/login_register/account/widgets/button_logout_widget.dart';
 import 'package:predict_anemia/view/login_register/account/widgets/header_account_widget.dart';
 import 'package:predict_anemia/view/welcome/welcome_screen.dart';
