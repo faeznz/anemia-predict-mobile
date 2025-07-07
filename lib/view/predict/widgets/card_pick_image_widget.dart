@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:predict_anemia/constant/color_constant.dart';
 import 'package:predict_anemia/constant/text_style_constant.dart';
 import 'package:predict_anemia/view/predict/process_screen.dart';
+import 'package:predict_anemia/view/predict/widgets/camera_popup_widget.dart';
 
 class CardPickImageWidget extends StatefulWidget {
   const CardPickImageWidget({super.key});
@@ -77,7 +78,17 @@ class _CardPickImageWidgetState extends State<CardPickImageWidget> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _openCamera,
+                            onPressed: () async {
+                              final imagePath = await showDialog<String>(
+                                context: context,
+                                builder: (context) => const CameraPopup(),
+                              );
+                              if (imagePath != null) {
+                                setState(() {
+                                  _imageFile = XFile(imagePath);
+                                });
+                              }
+                            },
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
                                 ColorConstant.whiteColor,
