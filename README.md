@@ -9,8 +9,7 @@ Aplikasi mobile berbasis Flutter yang berfungsi sebagai **antarmuka pengguna** u
 * 🔍 **Prediksi Anemia** berdasarkan citra tangan pengguna (via API)
 * 📷 **Pengambilan gambar langsung dari kamera**
 * 🌐 **Koneksi ke API server** untuk prediksi
-* 📀 Penyimpanan hasil prediksi lokal (opsional)
-* 📲 Dukungan multi-platform (Android dan iOS)
+* 📀 Penyimpanan hasil prediksi (Login)
 
 ## 📸 Cara Kerja Aplikasi
 
